@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Ambev.DeveloperEvaluation.Common.Validation;
+using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
 
 namespace Ambev.DeveloperEvaluation.WebApi.Common;
@@ -7,6 +8,30 @@ namespace Ambev.DeveloperEvaluation.WebApi.Common;
 [ApiController]
 public class BaseController : ControllerBase
 {
+    protected readonly DomainValidationContext _domainValidationContext;
+
+    public BaseController(DomainValidationContext domainValidationContext)
+    {
+        _domainValidationContext = domainValidationContext;
+    }
+
+    protected bool OperationValid()
+    {
+        return !_domainValidationContext.ExistErros;
+    }
+
+    protected ActionResult ErrorResponse()
+    {
+        var response = new ApiResponse
+        {
+            Success = false,
+            Message = "Domain Validation Error",
+            Errors = _domainValidationContext.Erros
+        };
+
+        return StatusCode(StatusCodes.Status400BadRequest, response);
+    }
+
     protected int GetCurrentUserId() =>
             int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)?.Value ?? throw new NullReferenceException());
 

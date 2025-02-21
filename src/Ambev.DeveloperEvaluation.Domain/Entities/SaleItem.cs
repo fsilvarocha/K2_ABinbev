@@ -5,36 +5,55 @@ namespace Ambev.DeveloperEvaluation.Domain.Entities;
 
 public class SaleItem
 {
-    public Guid Id { get; private set; } = Guid.NewGuid();
-    public string ProductName { get; private set; }
-    public int Quantity { get; private set; }
-    public decimal UnitPrice { get; private set; }
-    public decimal Discount { get; private set; }
-    [IgnoreDataMember]
-    public decimal TotalAmount => Quantity * UnitPrice - Discount;
-    [JsonIgnore]
-    public Guid SaleId { get; private set; }
-    [JsonIgnore]
-    public Sale Sale { get; private set; }
+    /// <summary>
+    /// Gets the identifier of sale associated with the sale item
+    /// </summary>
+    public Guid SaleId { get; set; }
 
-    public SaleItem(string productName, int quantity, decimal unitPrice)
+    /// <summary>
+    /// Gets the identifier of product associated with the sale item
+    /// </summary>
+    public Guid ProductId { get; set; }
+
+    /// <summary>
+    /// Gets quantity of products
+    /// </summary>
+    public int Quantity { get; set; }
+
+    /// <summary>
+    ///Gets unit price of product
+    /// </summary>
+    public decimal UnitPrice { get; set; }
+
+    /// <summary>
+    /// Property mapping of EF Core.<br /> 
+    /// </summary
+    public Sale Sale { get; set; }
+
+    /// <summary>
+    /// Property mapping of EF Core.<br /> 
+    /// </summary
+    public Product Product { get; set; }
+
+    public decimal CalculateValue()
     {
-        if (quantity > 20)
-            throw new Exception("Não é permitido vender mais de 20 itens idênticos.");
-
-        ProductName = productName;
-        Quantity = quantity;
-        UnitPrice = unitPrice;
-        Discount = 0;
+        return Quantity * UnitPrice;
     }
 
-    public void ApplyDiscount(decimal discountPercentage)
+    public bool HasUnits()
     {
-        Discount = (Quantity * UnitPrice) * discountPercentage;
+        return Quantity > 0;
     }
 
-    public void RemoveDiscount()
+    public void AddUnits(int units)
     {
-        Discount = 0;
+        Quantity += units;
     }
+
+    public void UpdateUnits(int units)
+    {
+        Quantity = units;
+    }
+
+
 }

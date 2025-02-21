@@ -4,6 +4,7 @@ using AutoMapper;
 using Ambev.DeveloperEvaluation.WebApi.Common;
 using Ambev.DeveloperEvaluation.WebApi.Features.Auth.AuthenticateUserFeature;
 using Ambev.DeveloperEvaluation.Application.Auth.AuthenticateUser;
+using Ambev.DeveloperEvaluation.Common.Validation;
 
 namespace Ambev.DeveloperEvaluation.WebApi.Features.Auth;
 
@@ -22,7 +23,7 @@ public class AuthController : BaseController
     /// </summary>
     /// <param name="mediator">The mediator instance</param>
     /// <param name="mapper">The AutoMapper instance</param>
-    public AuthController(IMediator mediator, IMapper mapper)
+    public AuthController(DomainValidationContext domainValidationContext, IMediator mediator, IMapper mapper) : base(domainValidationContext)
     {
         _mediator = mediator;
         _mapper = mapper;

@@ -8,21 +8,11 @@ public class SaleConfiguration : IEntityTypeConfiguration<Sale>
 {
     public void Configure(EntityTypeBuilder<Sale> builder)
     {
-        builder.ToTable("Sale");
+        builder.ToTable("Sales");
 
         builder.HasKey(s => s.Id);
-        builder.Property(s => s.Id)
-            .HasMaxLength(80)
-            .IsRequired();
 
-        builder.Property(s => s.SaleNumber).HasMaxLength(50);
-        builder.Property(s => s.SaleDate);
-        builder.Property(s => s.Customer).HasMaxLength(50);
-        builder.Property(s => s.TotalAmount);
-        builder.Property(s => s.Branch).HasMaxLength(50);
-        builder.Property(s => s.IsCancelled).HasDefaultValue("true");
-
-        builder.Navigation(s => s.Items)
-            .AutoInclude();
+        builder.Property(s => s.Number)
+            .UseIdentityColumn();
     }
 }

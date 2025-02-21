@@ -8,21 +8,17 @@ public class SaleItemConfiguration : IEntityTypeConfiguration<SaleItem>
 {
     public void Configure(EntityTypeBuilder<SaleItem> builder)
     {
-        builder.ToTable("SaleItem");
+        builder.ToTable("SaleItems");
 
-        builder.HasKey(s => s.Id);
-        builder.Property(s => s.Id)
-            .HasMaxLength(80)
-            .IsRequired();
+        builder.HasKey(si => new { si.SaleId, si.ProductId });
 
-        builder.Property(s => s.ProductName).HasMaxLength(50);
-        builder.Property(s => s.Quantity);
-        builder.Property(s => s.UnitPrice);
-        builder.Property(s => s.Discount);
+        builder.HasOne(si => si.Sale)
+            .WithMany(s => s.SaleItems)
+            .HasForeignKey(si => si.SaleId);
 
-        builder.HasOne(b => b.Sale)
-            .WithMany(c => c.Items)
-            .HasForeignKey(b => b.SaleId)
-            .OnDelete(DeleteBehavior.Cascade);
+        builder.HasOne(si => si.Product)
+            .WithMany(p => p.SaleItems)
+            .HasForeignKey(si => si.ProductId);
+
     }
 }
